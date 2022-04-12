@@ -18,7 +18,7 @@ export interface IUser {
 export interface IUpdatedWorkout {
   title?: string;
   description?: string;
-  type?: string;
+  type?: IWorkoutsType;
   duration?: number;
   data?: string;
 }
@@ -26,7 +26,7 @@ export interface IUpdatedWorkout {
 export interface ICreateWorkout {
   title: string;
   description: string;
-  type: string;
+  type: IWorkoutsType;
   duration: number;
   data: string;
 }
