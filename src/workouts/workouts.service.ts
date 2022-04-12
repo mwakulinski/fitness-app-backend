@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { Workout } from './entity/Workout.entity';
@@ -6,10 +8,13 @@ import { mockDataBase } from './mockDataBase/mockData';
 
 @Injectable()
 export class WorkoutsService {
+  constructor(
+    @InjectRepository(Workout) private workoutRepository: Repository<Workout>,
+  ) {}
   public workoutList: Workout[] = [...mockDataBase];
 
-  getAll() {
-    return this.workoutList;
+  async getAll() {
+    return await this.workoutRepository.find();
   }
 
   findById(id: number) {
