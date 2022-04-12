@@ -13,3 +13,10 @@ export interface IUser {
   weight: number;
   heigh?: number;
 }
+
+export interface IUpdatedWorkout {
+  title?: string;
+  description?: string;
+  type?: string;
+  data?: string;
+}
