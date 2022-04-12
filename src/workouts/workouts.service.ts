@@ -38,12 +38,17 @@ export class WorkoutsService {
     }
   }
 
-  updateWorkout(id: number, updateWorkoutDto: UpdateWorkoutDto) {
-    const userToUpdate = this.workoutList.find((workout) => workout.id === id);
-    const updateWorkoutDtoKey = Object.keys(updateWorkoutDto);
-    updateWorkoutDtoKey.forEach((key) => {
-      userToUpdate[key] = updateWorkoutDto[key];
-    });
+  async updateWorkout(id: number, updateWorkoutDto: UpdateWorkoutDto) {
+    const updateKeys = Object.keys(updateWorkoutDto);
+    try {
+      let workoutToUpdate = await this.findById(id);
+      updateKeys.forEach((key) => {
+        workoutToUpdate[key] = updateWorkoutDto[key];
+      });
+      return this.workoutRepository.save(workoutToUpdate);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async deleteWorkout(id: number) {
