@@ -45,7 +45,12 @@ export class WorkoutsService {
     });
   }
 
-  deleteWorkout(id: number) {
-    this.workoutList = this.workoutList.filter((workout) => workout.id !== id);
+  async deleteWorkout(id: number) {
+    try {
+      const workoutToDelete = await this.findById(id);
+      return this.workoutRepository.remove(workoutToDelete);
+    } catch (error) {
+      throw error;
+    }
   }
 }
