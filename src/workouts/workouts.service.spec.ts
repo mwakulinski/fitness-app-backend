@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IWorkoutsType } from 'src/interfaces/interfaces';
+// import { IWorkoutsType } from 'src/interfaces/interfaces';
 import { mockDataBase } from './mockDataBase/mockData';
 import { WorkoutsService } from './workouts.service';
 
@@ -27,7 +27,22 @@ describe('WorkoutsService', () => {
       id: 1,
       title: 'Szybkie bieganie',
       description: '5 serii po 10 sekund sprintu x 3 serie',
-      type: IWorkoutsType.running,
+      type: 'Running',
+      duration: 15,
+      data: '2022-04-05',
+    });
+  });
+
+  it('should update one workout when given id of workout', () => {
+    service.updateWorkout(1, {
+      title: 'Bardzo szybkie bieganie',
+      description: '5 serii po 5 sekund sprintu X 5 serii',
+    });
+    expect(service.findById(1)).toEqual({
+      id: 1,
+      title: 'Bardzo szybkie bieganie',
+      description: '5 serii po 5 sekund sprintu X 5 serii',
+      type: 'Running',
       duration: 15,
       data: '2022-04-05',
     });
