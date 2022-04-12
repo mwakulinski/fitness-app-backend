@@ -33,4 +33,19 @@ describe('WorkoutsController', () => {
       data: '2022-04-05',
     });
   });
+
+  it('should update one workout when given id of workout', () => {
+    controller.updateWorkout(1, {
+      title: 'Bardzo szybkie bieganie',
+      description: '5 serii po 5 sekund sprintu X 5 serii',
+    });
+    expect(controller.findById(1)).toEqual({
+      id: 1,
+      title: 'Bardzo szybkie bieganie',
+      description: '5 serii po 5 sekund sprintu X 5 serii',
+      type: 'Running',
+      duration: 15,
+      data: '2022-04-05',
+    });
+  });
 });
