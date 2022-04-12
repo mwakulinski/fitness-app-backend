@@ -19,7 +19,16 @@ export interface IUpdatedWorkout {
   title?: string;
   description?: string;
   type?: string;
+  duration?: number;
   data?: string;
+}
+
+export interface ICreateWorkout {
+  title: string;
+  description: string;
+  type: string;
+  duration: number;
+  data: string;
 }
 
 export type IWorkoutsType = 'Cardio' | 'Cycling' | 'Running' | 'General';
