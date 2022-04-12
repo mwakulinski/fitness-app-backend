@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
@@ -28,13 +29,13 @@ export class WorkoutsController {
 
   @Patch(':id')
   updateWorkout(
-    @Param(':id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateWorkoutDto: UpdateWorkoutDto,
   ) {
     this.workoutsService.updateWorkout(id, updateWorkoutDto);
   }
 
-  @Delete('id')
+  @Delete(':id')
   deleteWorkout(@Param('id', ParseIntPipe) id: number) {
     this.workoutsService.deleteWorkout(id);
   }
