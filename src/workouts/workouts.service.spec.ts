@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateWorkoutDto } from './dto/create-workout.dto';
 // import { IWorkoutsType } from 'src/interfaces/interfaces';
 import { mockDataBase } from './mockDataBase/mockData';
 import { WorkoutsService } from './workouts.service';
@@ -46,5 +47,21 @@ describe('WorkoutsService', () => {
       duration: 15,
       data: '2022-04-05',
     });
+  });
+
+  it('should add new workout to the list', () => {
+    const addedWorkout: CreateWorkoutDto = {
+      title: 'Szybkie kodowanie',
+      description: 'Pisanie 200 stestów na godzinę',
+      type: 'Cardio',
+      duration: 60,
+      data: '2022-04-12',
+    };
+    service.addWorkout(addedWorkout);
+    console.log(service.workoutList);
+    expect(service.getAll()).toEqual([
+      ...mockDataBase,
+      { id: expect.any(Number), ...addedWorkout },
+    ]);
   });
 });

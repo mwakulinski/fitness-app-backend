@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { IWorkoutsType } from 'src/interfaces/interfaces';
+import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { Workout } from './entity/Workout.entity';
 import { mockDataBase } from './mockDataBase/mockData';
 
 @Injectable()
 export class WorkoutsService {
-  private workoutList: Workout[] = mockDataBase;
+  readonly workoutList: Workout[] = [...mockDataBase];
 
   getAll() {
     return this.workoutList;
@@ -22,5 +22,9 @@ export class WorkoutsService {
     updateWorkoutDtoKey.forEach((key) => {
       userToUpdate[key] = updateWorkoutDto[key];
     });
+  }
+
+  addWorkout(createWorkoutDto: CreateWorkoutDto) {
+    this.workoutList.push({ id: Math.random(), ...createWorkoutDto });
   }
 }
