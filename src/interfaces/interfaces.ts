@@ -22,9 +22,4 @@ export interface IUpdatedWorkout {
   data?: string;
 }
 
-export enum IWorkoutsType {
-  cardio = 'Cardio',
-  cycling = 'Cycling',
-  running = 'Running',
-  general = 'General',
-}
+export type IWorkoutsType = 'Cardio' | 'Cycling' | 'Running' | 'General';
