@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
@@ -22,7 +22,8 @@ export class WorkoutsService {
       const response = await this.workoutRepository.findOneOrFail(id);
       return response;
     } catch (error) {
-      throw error;
+      console.log(error);
+      throw new NotFoundException();
     }
   }
 
@@ -31,7 +32,7 @@ export class WorkoutsService {
       const newWorkout = await this.workoutRepository.create({
         ...createWorkoutDto,
       });
-      return this.workoutRepository.save(newWorkout); //Insert or Update
+      return await this.workoutRepository.save(newWorkout); //Insert or Update
     } catch (error) {
       throw error;
     }
@@ -48,7 +49,7 @@ export class WorkoutsService {
   async deleteWorkout(id: number) {
     try {
       const workoutToDelete = await this.findById(id);
-      return this.workoutRepository.remove(workoutToDelete);
+      return await this.workoutRepository.remove(workoutToDelete);
     } catch (error) {
       throw error;
     }
