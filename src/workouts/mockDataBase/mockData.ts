@@ -1,6 +1,6 @@
 import { Workout } from '../entity/Workout.entity';
 
-const mockDataBase: Workout[] = [
+export const mockDataBase: Workout[] = [
   {
     id: 1,
     title: 'Szybkie bieganie',
