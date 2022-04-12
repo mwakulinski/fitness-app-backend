@@ -9,4 +9,8 @@ export class WorkoutsService {
   getAll() {
     return this.workoutList;
   }
+
+  findById(id: number) {
+    return this.workoutList.find((workout) => workout.id === id);
+  }
 }
