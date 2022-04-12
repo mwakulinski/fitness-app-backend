@@ -26,10 +26,12 @@ export class WorkoutsService {
     }
   }
 
-  addWorkout(createWorkoutDto: CreateWorkoutDto) {
+  async addWorkout(createWorkoutDto: CreateWorkoutDto) {
     try {
-      const newUser = this.workoutRepository.create({ ...createWorkoutDto });
-      return this.workoutRepository.save(newUser); //Insert or Update
+      const newWorkout = await this.workoutRepository.create({
+        ...createWorkoutDto,
+      });
+      return this.workoutRepository.save(newWorkout); //Insert or Update
     } catch (error) {
       throw error;
     }
