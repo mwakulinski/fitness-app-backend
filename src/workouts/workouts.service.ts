@@ -17,8 +17,13 @@ export class WorkoutsService {
     return await this.workoutRepository.find();
   }
 
-  findById(id: number) {
-    return this.workoutList.find((workout) => workout.id === id);
+  async findById(id: number) {
+    try {
+      const response = await this.workoutRepository.findOneOrFail(id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   updateWorkout(id: number, updateWorkoutDto: UpdateWorkoutDto) {
