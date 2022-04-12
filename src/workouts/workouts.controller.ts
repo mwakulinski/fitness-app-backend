@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -29,5 +30,10 @@ export class WorkoutsController {
     @Body() updateWorkoutDto: UpdateWorkoutDto,
   ) {
     this.workoutsService.updateWorkout(id, updateWorkoutDto);
+  }
+
+  @Delete('id')
+  deleteWorkout(@Param('id', ParseIntPipe) id: number) {
+    this.workoutsService.deleteWorkout(id);
   }
 }

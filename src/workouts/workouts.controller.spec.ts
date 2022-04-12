@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockDataBase } from './mockDataBase/mockData';
 import { WorkoutsController } from './workouts.controller';
+import { WorkoutsModule } from './workouts.module';
 import { WorkoutsService } from './workouts.service';
 
 describe('WorkoutsController', () => {
@@ -8,8 +9,7 @@ describe('WorkoutsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [WorkoutsController],
-      providers: [WorkoutsService],
+      imports: [WorkoutsModule],
     }).compile();
 
     controller = module.get<WorkoutsController>(WorkoutsController);
@@ -32,6 +32,11 @@ describe('WorkoutsController', () => {
       duration: 15,
       data: '2022-04-05',
     });
+  });
+
+  it('should update one workout when given id of workout', () => {
+    controller.deleteWorkout(1);
+    expect(controller.getAll()).toEqual(mockDataBase.slice(1));
   });
 
   it('should update one workout when given id of workout', () => {
