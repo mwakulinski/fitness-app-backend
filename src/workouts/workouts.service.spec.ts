@@ -64,4 +64,9 @@ describe('WorkoutsService', () => {
       { id: expect.any(Number), ...addedWorkout },
     ]);
   });
+
+  it('should delete workout by id when given id of workout', () => {
+    service.deleteWorkout(1);
+    expect(service.getAll()).toEqual(mockDataBase.slice(1));
+  });
 });

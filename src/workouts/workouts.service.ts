@@ -6,7 +6,7 @@ import { mockDataBase } from './mockDataBase/mockData';
 
 @Injectable()
 export class WorkoutsService {
-  readonly workoutList: Workout[] = [...mockDataBase];
+  public workoutList: Workout[] = [...mockDataBase];
 
   getAll() {
     return this.workoutList;
@@ -26,5 +26,9 @@ export class WorkoutsService {
 
   addWorkout(createWorkoutDto: CreateWorkoutDto) {
     this.workoutList.push({ id: Math.random(), ...createWorkoutDto });
+  }
+
+  deleteWorkout(id: number) {
+    this.workoutList = this.workoutList.filter((workout) => workout.id !== id);
   }
 }
