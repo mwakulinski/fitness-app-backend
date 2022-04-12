@@ -26,16 +26,21 @@ export class WorkoutsService {
     }
   }
 
+  addWorkout(createWorkoutDto: CreateWorkoutDto) {
+    try {
+      const newUser = this.workoutRepository.create({ ...createWorkoutDto });
+      return this.workoutRepository.save(newUser); //Insert or Update
+    } catch (error) {
+      throw error;
+    }
+  }
+
   updateWorkout(id: number, updateWorkoutDto: UpdateWorkoutDto) {
     const userToUpdate = this.workoutList.find((workout) => workout.id === id);
     const updateWorkoutDtoKey = Object.keys(updateWorkoutDto);
     updateWorkoutDtoKey.forEach((key) => {
       userToUpdate[key] = updateWorkoutDto[key];
     });
-  }
-
-  addWorkout(createWorkoutDto: CreateWorkoutDto) {
-    this.workoutList.push({ id: Math.random(), ...createWorkoutDto });
   }
 
   deleteWorkout(id: number) {
