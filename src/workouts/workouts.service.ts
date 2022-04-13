@@ -13,11 +13,11 @@ export class WorkoutsService {
   ) {}
   public workoutList: Workout[] = [...mockDataBase];
 
-  async getAll() {
+  async getAll(): Promise<Workout[]> {
     return await this.workoutRepository.find(); //SELECT * FROM WORKOUT
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<Workout> {
     try {
       const response = await this.workoutRepository.findOneOrFail(id); //SELECT * FROM workout WHERE ...
       return response;
@@ -27,7 +27,7 @@ export class WorkoutsService {
     }
   }
 
-  async addWorkout(createWorkoutDto: CreateWorkoutDto) {
+  async addWorkout(createWorkoutDto: CreateWorkoutDto): Promise<Workout> {
     try {
       const newWorkout = await this.workoutRepository.create({
         ...createWorkoutDto,
@@ -38,7 +38,10 @@ export class WorkoutsService {
     }
   }
 
-  async updateWorkout(id: number, updateWorkoutDto: UpdateWorkoutDto) {
+  async updateWorkout(
+    id: number,
+    updateWorkoutDto: UpdateWorkoutDto,
+  ): Promise<Workout> {
     const updateKeys = Object.keys(updateWorkoutDto);
     try {
       let workoutToUpdate = await this.findById(id);
@@ -51,7 +54,7 @@ export class WorkoutsService {
     }
   }
 
-  async deleteWorkout(id: number) {
+  async deleteWorkout(id: number): Promise<Workout> {
     try {
       const workoutToDelete = await this.findById(id);
       return await this.workoutRepository.remove(workoutToDelete);
