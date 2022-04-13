@@ -32,16 +32,16 @@ export class WorkoutsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateWorkoutDto: UpdateWorkoutDto,
   ) {
-    this.workoutsService.updateWorkout(id, updateWorkoutDto);
+    return this.workoutsService.updateWorkout(id, updateWorkoutDto);
   }
 
   @Delete(':id')
   deleteWorkout(@Param('id', ParseIntPipe) id: number) {
-    this.workoutsService.deleteWorkout(id);
+    return this.workoutsService.deleteWorkout(id);
   }
 
   @Post()
   addWorkout(@Body() createWorkoutDto: CreateWorkoutDto) {
-    this.workoutsService.addWorkout(createWorkoutDto);
+    return this.workoutsService.addWorkout(createWorkoutDto);
   }
 }
