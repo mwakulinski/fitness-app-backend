@@ -1,4 +1,11 @@
-import { IsOptional, IsString, Length, MinLength } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { IUpdatedWorkout, IWorkoutsType } from 'src/interfaces/interfaces';
 
 export class UpdateWorkoutDto implements IUpdatedWorkout {
@@ -16,6 +23,10 @@ export class UpdateWorkoutDto implements IUpdatedWorkout {
   @MinLength(5)
   @IsOptional()
   type?: IWorkoutsType;
+
+  @IsNumber()
+  @Min(1)
+  duration?: number;
 
   @IsString()
   @Length(10)
