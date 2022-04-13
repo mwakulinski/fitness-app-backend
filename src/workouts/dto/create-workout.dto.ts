@@ -1,4 +1,4 @@
-import { IsString, MinLength } from 'class-validator';
+import { IsNumber, IsString, Min, MinLength } from 'class-validator';
 import { ICreateWorkout, IWorkoutsType } from 'src/interfaces/interfaces';
 
 export class CreateWorkoutDto implements ICreateWorkout {
@@ -14,8 +14,8 @@ export class CreateWorkoutDto implements ICreateWorkout {
   @MinLength(5)
   type: IWorkoutsType;
 
-  @IsString()
-  @MinLength(5)
+  @IsNumber()
+  @Min(1)
   duration: number;
 
   @IsString()
