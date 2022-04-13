@@ -14,12 +14,12 @@ export class WorkoutsService {
   public workoutList: Workout[] = [...mockDataBase];
 
   async getAll() {
-    return await this.workoutRepository.find();
+    return await this.workoutRepository.find(); //SELECT * FROM WORKOUT
   }
 
   async findById(id: number) {
     try {
-      const response = await this.workoutRepository.findOneOrFail(id);
+      const response = await this.workoutRepository.findOneOrFail(id); //SELECT * FROM workout WHERE ...
       return response;
     } catch (error) {
       console.log(error);

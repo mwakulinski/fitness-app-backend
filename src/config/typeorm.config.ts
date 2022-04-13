@@ -1,6 +1,6 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export const typeOrmCongid: PostgresConnectionOptions = {
+export const typeOrmConfig: PostgresConnectionOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 5432,
