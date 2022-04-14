@@ -61,4 +61,13 @@ export class WorkoutsService {
       throw error;
     }
   }
+
+  // async findBetweenDates(form: string, to: string) {
+  //   try {
+  //     return await this.workoutRepository.
+  //   } catch (error) {
+
+  //   }
+
+  // }
 }

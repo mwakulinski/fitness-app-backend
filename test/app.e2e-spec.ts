@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-// import {
-//   cleanupBeforeEachSpec,
-//   DatabaseCleaner,
-// } from './../src/databasecleaner/database-cleaner';
+import {
+  cleanupBeforeEachSpec,
+  DatabaseCleaner,
+} from './../src/databasecleaner/database-cleaner';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -19,7 +19,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  // beforeEach(() => new DatabaseCleaner().cleanup());
+  cleanupBeforeEachSpec();
 
   it('/workouts [Get]', async () => {
     return await request(app.getHttpServer())
@@ -28,27 +28,40 @@ describe('AppController (e2e)', () => {
       .expect([]);
   });
 
-  // describe('/workouts [Post]', () => {
-  //   async function createLog() {
-  //     await request(app.getHttpServer())
-  //       .post('/workouts')
-  //       .send({
-  //         title: 'Szybkie Testowanie',
-  //         description: 'Pisanie 200 stestów na godzinę',
-  //         type: 'Cardio',
-  //         duration: 60,
-  //         data: '2022-04-12',
-  //       })
-  //       .expect(201);
-  //   }
+  describe('/workouts [Post]', () => {
+    async function createLog() {
+      await request(app.getHttpServer())
+        .post('/workouts')
+        .send({
+          title: 'Szybkie Testowanie',
+          description: 'Pisanie 200 stestów na godzinę',
+          type: 'Cardio',
+          duration: 60,
+          data: '2022-04-12',
+        })
+        .expect(201);
+    }
 
-  //   it('returns logs table', async () => {
-  //     await createLog();
-  //     // const { body: response } = await request(app.getHttpServer()).get("/logs").send();
+    // it('returns workout table', async () => {
+    //   await createLog();
+    //   const { body: response } = await request(app.getHttpServer())
+    //     .get('/workout')
+    //     .send();
 
-  //     // expect(response).toEqual({ items: [{ id: expect.any(Number), name: expect.any(String) }] });
-  //   });
-  // });
+    //   expect(response).toEqual({
+    //     items: [
+    //       {
+    //         id: 1,
+    //         title: 'Szybkie Testowanie',
+    //         description: 'Pisanie 200 stestów na godzinę',
+    //         type: 'Cardio',
+    //         duration: 60,
+    //         data: '2022-04-12',
+    //       },
+    //     ],
+    //   });
+    // });
+  });
 
   afterAll(async () => {
     await app.close();
