@@ -6,6 +6,6 @@ services:
     ports:
       - '5432:5432'
     env_file:
-      - ../.env.development
+      - ../.env.docker
     volumes:
       - ./data:/var/lib/postgresql/data

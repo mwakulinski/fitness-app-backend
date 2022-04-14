@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmConfig } from 'src/config/typeorm.config';
+// import { typeOrmConfig } from 'src/config/typeorm.config';
 import { Repository } from 'typeorm';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { Workout } from './entity/Workout.entity';

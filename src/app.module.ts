@@ -1,23 +1,23 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { typeOrmConfig as typeOrmConfig } from './config/typeorm.config';
+import { DatabaseModule } from './database/database.module';
 import { WorkoutsModule } from './workouts/workouts.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    WorkoutsModule,
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const env = configService.get<string>('NODE_ENV'); //zmienna lokalna
-        console.log(env);
-        return typeOrmConfig(env === 'test');
-      },
+    ConfigModule.forRoot({
+      envFilePath: [
+        `.env.${process.env.NODE_ENV || 'development'}.local`,
+        '.env',
+        `.env.${process.env.NODE_ENV || 'development'}`,
+      ],
+      cache: true,
+      isGlobal: true,
     }),
+    WorkoutsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

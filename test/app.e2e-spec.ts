@@ -2,12 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-// import { cleanupBeforeEachSpec } from './../src/databasecleaner/database-cleaner';
+// import {
+//   cleanupBeforeEachSpec,
+//   DatabaseCleaner,
+// } from './../src/databasecleaner/database-cleaner';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-
-  // cleanupBeforeEachSpec();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -18,8 +19,13 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/workouts [Get]', () => {
-    return request(app.getHttpServer()).get('/workouts').expect(200).expect([]);
+  // beforeEach(() => new DatabaseCleaner().cleanup());
+
+  it('/workouts [Get]', async () => {
+    return await request(app.getHttpServer())
+      .get('/workouts')
+      .expect(200)
+      .expect([]);
   });
 
   // describe('/workouts [Post]', () => {
