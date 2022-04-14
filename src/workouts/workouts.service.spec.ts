@@ -1,18 +1,42 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfig } from 'src/config/typeorm.config';
+import { Repository } from 'typeorm';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
+import { Workout } from './entity/Workout.entity';
 // import { IWorkoutsType } from 'src/interfaces/interfaces';
 import { mockDataBase } from './mockDataBase/mockData';
 import { WorkoutsService } from './workouts.service';
 
 describe('WorkoutsService', () => {
   let service: WorkoutsService;
+  let repo: Repository<Workout>;
+  let module: TestingModule;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    module = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: 'localhost',
+          port: 5432,
+          username: 'postgres',
+          password: 'postgres',
+          database: 'postgres',
+          entities: ['dist/**/*.entity.js'],
+          synchronize: true,
+        }),
+        TypeOrmModule.forFeature([Workout]),
+      ],
       providers: [WorkoutsService],
     }).compile();
 
     service = module.get<WorkoutsService>(WorkoutsService);
+    repo = module.get<Repository<Workout>>(getRepositoryToken(Workout));
+  });
+
+  afterAll(async () => {
+    module.close();
   });
 
   it('should be defined', () => {
@@ -58,7 +82,6 @@ describe('WorkoutsService', () => {
       data: '2022-04-12',
     };
     service.addWorkout(addedWorkout);
-    console.log(service.workoutList);
     expect(service.getAll()).toEqual([
       ...mockDataBase,
       { id: expect.any(Number), ...addedWorkout },

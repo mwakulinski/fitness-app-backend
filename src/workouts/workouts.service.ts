@@ -11,7 +11,6 @@ export class WorkoutsService {
   constructor(
     @InjectRepository(Workout) private workoutRepository: Repository<Workout>,
   ) {}
-  public workoutList: Workout[] = [...mockDataBase];
 
   async getAll(): Promise<Workout[]> {
     return await this.workoutRepository.find(); //SELECT * FROM WORKOUT
