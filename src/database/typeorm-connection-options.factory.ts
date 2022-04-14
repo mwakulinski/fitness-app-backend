@@ -24,5 +24,9 @@ export const typeOrmConnectionOptionsFactory = (
     );
   }
 
-  return { ...ormConfig, url: databaseUrl } as PostgresConnectionOptions;
+  return {
+    ...ormConfig,
+    url: databaseUrl,
+    name: 'default',
+  } as PostgresConnectionOptions;
 };
