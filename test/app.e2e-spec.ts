@@ -2,10 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import {
-  cleanupBeforeEachSpec,
-  DatabaseCleaner,
-} from './../src/databasecleaner/database-cleaner';
+import { cleanupBeforeEachSpec } from './../src/databasecleaner/database-cleaner';
 import { CreateWorkoutDto } from '../src/workouts/dto/create-workout.dto';
 import { UpdateWorkoutDto } from '../src/workouts/dto/update-workout.dto';
 
@@ -19,15 +16,15 @@ describe('AppController (e2e)', () => {
     data: '2022-04-12',
   };
   const mockWorkoutDto2: CreateWorkoutDto = {
-    title: 'Szybkie Testowanie',
-    description: 'Pisanie 200 stestów na godzinę',
+    title: 'Bieganie szybkie tempo',
+    description: 'Bieganie 2 razy po 500m',
     type: 'Cardio',
     duration: 60,
     data: '2022-04-13',
   };
   const mockWorkoutDto3: CreateWorkoutDto = {
-    title: 'Szybkie Testowanie',
-    description: 'Pisanie 200 stestów na godzinę',
+    title: 'Szybkie Kodowanie',
+    description: 'Pisanie 1000 linijek kodu z hackertyper',
     type: 'Cardio',
     duration: 60,
     data: '2022-04-15',
@@ -44,11 +41,13 @@ describe('AppController (e2e)', () => {
 
   cleanupBeforeEachSpec();
 
-  it('/workouts [Get]', async () => {
-    return await request(app.getHttpServer())
-      .get('/workouts')
-      .expect(200)
-      .expect([]);
+  describe("'/workouts [Get]", () => {
+    it('returns empty array when no workouts added', async () => {
+      return await request(app.getHttpServer())
+        .get('/workouts')
+        .expect(200)
+        .expect([]);
+    });
   });
 
   describe('/workouts [Post]', () => {
@@ -95,7 +94,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('/workouts/find?from=&to= [Get]', () => {
+  describe('/workouts/[:id] [Patch]', () => {
     async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
       await request(app.getHttpServer())
         .post('/workouts')
@@ -105,29 +104,26 @@ describe('AppController (e2e)', () => {
 
     async function updateWorkout(updateWorkoutDto: UpdateWorkoutDto) {
       await request(app.getHttpServer())
-        .post('/workouts')
+        .patch('/workouts/1')
         .send(updateWorkoutDto)
-        .expect(201);
+        .expect(200);
     }
 
     it('returns workout table', async () => {
       await createWorkout(mockWorkoutDto);
       await updateWorkout(mockWorkoutDto2);
       const { body: response } = await request(app.getHttpServer())
-        .get('/workouts/find')
-        .query({ from: '2022/04/10', to: '2022/04/12' })
+        .get('/workouts/1')
         .send();
 
-      expect(response).toEqual([
-        {
-          id: 1,
-          title: 'Szybkie Testowanie',
-          description: 'Pisanie 200 stestów na godzinę',
-          type: 'Cardio',
-          duration: 60,
-          data: expect.any(String),
-        },
-      ]);
+      expect(response).toEqual({
+        id: 1,
+        title: 'Bieganie szybkie tempo',
+        description: 'Bieganie 2 razy po 500m',
+        type: 'Cardio',
+        duration: 60,
+        data: expect.any(String),
+      });
     });
   });
 
