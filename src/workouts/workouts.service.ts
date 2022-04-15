@@ -32,7 +32,7 @@ export class WorkoutsService {
 
   async findById(id: number): Promise<Workout> {
     try {
-      const workout = await this.workoutRepository.findOneOrFail(id); //SELECT * FROM workout WHERE ...
+      const workout = await this.workoutRepository.findOneOrFail(id);
       workout.data = formatInTimeZone(
         workout.data,
         'Europe/Warsaw',
@@ -50,7 +50,7 @@ export class WorkoutsService {
       const newWorkout = await this.workoutRepository.create({
         ...createWorkoutDto,
       });
-      return await this.workoutRepository.save(newWorkout); //Insert or Update
+      return await this.workoutRepository.save(newWorkout);
     } catch (error) {
       throw error;
     }
