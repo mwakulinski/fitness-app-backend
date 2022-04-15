@@ -21,7 +21,7 @@ module.exports = [
 
     entities: [Workout],
     migrationsTableName: 'migrations',
-
+    migrations: ['dist/**/migrations/*.js'],
     cli: {
       migrationsDir: './src/migrations',
     },
