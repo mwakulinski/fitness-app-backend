@@ -30,6 +30,27 @@ describe('AppController (e2e)', () => {
     data: '2022-04-15',
   };
 
+  async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
+    await request(app.getHttpServer())
+      .post('/workouts')
+      .send(createWorkoutDto)
+      .expect(201);
+  }
+
+  async function updateWorkout(updateWorkoutDto: UpdateWorkoutDto) {
+    await request(app.getHttpServer())
+      .patch('/workouts/1')
+      .send(updateWorkoutDto)
+      .expect(200);
+  }
+
+  async function deleteWorkout(id: number) {
+    await request(app.getHttpServer())
+      .delete(`/workouts/${id}`)
+      .send()
+      .expect(200);
+  }
+
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -51,15 +72,8 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts [Post]', () => {
-    async function createWorkout() {
-      await request(app.getHttpServer())
-        .post('/workouts')
-        .send(mockWorkoutDto)
-        .expect(201);
-    }
-
     it('returns workout table', async () => {
-      await createWorkout();
+      await createWorkout(mockWorkoutDto);
       const { body: response } = await request(app.getHttpServer())
         .get('/workouts')
         .send();
@@ -69,23 +83,9 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts/[:id] [Delete]', () => {
-    async function createWorkout() {
-      await request(app.getHttpServer())
-        .post('/workouts')
-        .send(mockWorkoutDto)
-        .expect(201);
-    }
-
-    async function deleteWorkout() {
-      await request(app.getHttpServer())
-        .delete('/workouts/1')
-        .send()
-        .expect(200);
-    }
-
     it('returns workout table', async () => {
-      await createWorkout();
-      await deleteWorkout();
+      await createWorkout(mockWorkoutDto);
+      await deleteWorkout(1);
       const { body: response } = await request(app.getHttpServer())
         .get('/workouts')
         .send();
@@ -95,20 +95,6 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts/[:id] [Patch]', () => {
-    async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
-      await request(app.getHttpServer())
-        .post('/workouts')
-        .send(createWorkoutDto)
-        .expect(201);
-    }
-
-    async function updateWorkout(updateWorkoutDto: UpdateWorkoutDto) {
-      await request(app.getHttpServer())
-        .patch('/workouts/1')
-        .send(updateWorkoutDto)
-        .expect(200);
-    }
-
     it('returns workout table', async () => {
       await createWorkout(mockWorkoutDto);
       await updateWorkout(mockWorkoutDto2);
@@ -128,13 +114,6 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts/find?from=&to= [Get]', () => {
-    async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
-      await request(app.getHttpServer())
-        .post('/workouts')
-        .send(createWorkoutDto)
-        .expect(201);
-    }
-
     it('returns workout table', async () => {
       await createWorkout(mockWorkoutDto);
       await createWorkout(mockWorkoutDto2);
