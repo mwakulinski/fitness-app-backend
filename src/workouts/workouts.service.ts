@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { Workout } from './entity/Workout.entity';
-import { mockDataBase } from './mockDataBase/mockData';
 
 @Injectable()
 export class WorkoutsService {
@@ -13,7 +12,14 @@ export class WorkoutsService {
   ) {}
 
   async getAll(): Promise<Workout[]> {
-    return await this.workoutRepository.find(); //SELECT * FROM WORKOUT
+    try {
+      const workouts = await this.workoutRepository.query(
+        'SELECT id, title, description, type, duration, data FROM workouts',
+      );
+      return workouts;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findById(id: number): Promise<Workout> {
@@ -62,12 +68,13 @@ export class WorkoutsService {
     }
   }
 
-  // async findBetweenDates(form: string, to: string) {
-  //   try {
-  //     return await this.workoutRepository.
-  //   } catch (error) {
-
-  //   }
-
-  // }
+  async findBetweenDates(from: string, to: string) {
+    try {
+      return await this.workoutRepository.query(
+        `SELECT * FROM workouts WHERE data BETWEEN '${from}' AND '${to}'`,
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
@@ -20,6 +21,11 @@ export class WorkoutsController {
   @Get()
   getAll() {
     return this.workoutsService.getAll();
+  }
+
+  @Get('/find')
+  findBetweenDates(@Query('from') from: string, @Query('to') to: string) {
+    return this.workoutsService.findBetweenDates(from, to);
   }
 
   @Get(':id')
