@@ -23,8 +23,8 @@ describe('AppController (e2e)', () => {
     data: '2022-04-13',
   };
   const mockWorkoutDto3: CreateWorkoutDto = {
-    title: 'Szybkie Testowanie',
-    description: 'Pisanie 200 stestów na godzinę',
+    title: 'Szybkie Kodowanie',
+    description: 'Pisanie 1000 linijek kodu z hackertyper',
     type: 'Cardio',
     duration: 60,
     data: '2022-04-15',
@@ -41,11 +41,13 @@ describe('AppController (e2e)', () => {
 
   cleanupBeforeEachSpec();
 
-  it('/workouts [Get]', async () => {
-    return await request(app.getHttpServer())
-      .get('/workouts')
-      .expect(200)
-      .expect([]);
+  describe("'/workouts [Get]", () => {
+    it('returns empty array when no workouts added', async () => {
+      return await request(app.getHttpServer())
+        .get('/workouts')
+        .expect(200)
+        .expect([]);
+    });
   });
 
   describe('/workouts [Post]', () => {
