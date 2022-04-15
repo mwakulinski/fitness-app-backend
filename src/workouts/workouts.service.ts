@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { formatInTimeZone } from 'date-fns-tz';
 import { Repository } from 'typeorm';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
@@ -16,6 +17,13 @@ export class WorkoutsService {
       const workouts = await this.workoutRepository.query(
         'SELECT id, title, description, type, duration, data FROM workouts',
       );
+      workouts.forEach((workout) => {
+        workout.data = formatInTimeZone(
+          workout.data,
+          'Europe/Warsaw',
+          'yyyy-MM-dd HH:mm:ssXXX',
+        ).slice(0, 10);
+      });
       return workouts;
     } catch (error) {
       throw error;
@@ -24,8 +32,13 @@ export class WorkoutsService {
 
   async findById(id: number): Promise<Workout> {
     try {
-      const response = await this.workoutRepository.findOneOrFail(id); //SELECT * FROM workout WHERE ...
-      return response;
+      const workout = await this.workoutRepository.findOneOrFail(id); //SELECT * FROM workout WHERE ...
+      workout.data = formatInTimeZone(
+        workout.data,
+        'Europe/Warsaw',
+        'yyyy-MM-dd HH:mm:ssXXX',
+      ).slice(0, 10);
+      return workout;
     } catch (error) {
       console.log(error);
       throw new NotFoundException();
