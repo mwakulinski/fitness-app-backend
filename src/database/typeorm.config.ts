@@ -6,7 +6,12 @@ module.exports = [
     type: 'postgres',
     url: process.env.DATABASE_URL,
     schema: 'public',
-
+    ssl: true,
+    extra: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
     synchronize: false,
     migrationsRun: true,
 
