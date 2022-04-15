@@ -2,11 +2,38 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import {
+  cleanupBeforeEachSpec,
+  DatabaseCleaner,
+} from './../src/databasecleaner/database-cleaner';
+import { CreateWorkoutDto } from '../src/workouts/dto/create-workout.dto';
+import { UpdateWorkoutDto } from '../src/workouts/dto/update-workout.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  const mockWorkoutDto: CreateWorkoutDto = {
+    title: 'Szybkie Testowanie',
+    description: 'Pisanie 200 stestów na godzinę',
+    type: 'Cardio',
+    duration: 60,
+    data: '2022-04-12',
+  };
+  const mockWorkoutDto2: CreateWorkoutDto = {
+    title: 'Szybkie Testowanie',
+    description: 'Pisanie 200 stestów na godzinę',
+    type: 'Cardio',
+    duration: 60,
+    data: '2022-04-13',
+  };
+  const mockWorkoutDto3: CreateWorkoutDto = {
+    title: 'Szybkie Testowanie',
+    description: 'Pisanie 200 stestów na godzinę',
+    type: 'Cardio',
+    duration: 60,
+    data: '2022-04-15',
+  };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -15,76 +42,126 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
+  cleanupBeforeEachSpec();
 
-  it('/workouts (GET)', () => {
-    return request(app.getHttpServer())
+  it('/workouts [Get]', async () => {
+    return await request(app.getHttpServer())
       .get('/workouts')
       .expect(200)
-      .expect([
-        {
-          id: 1,
-          title: 'Szybkie bieganie',
-          description: '5 serii po 10 sekund sprintu x 3 serie',
-          type: 'Running',
-          duration: 15,
-          data: '2022-04-05',
-        },
-        {
-          id: 2,
-          title: 'Wolne bieganie',
-          description: '30 minut jogingu',
-          type: 'Running',
-          duration: 30,
-          data: '2022-04-15',
-        },
-        {
-          id: 3,
-          title: 'Szybkie pływanie',
-          description: '10 X 50 metrów x 3 serie',
-          type: 'Running',
-          duration: 45,
-          data: '2022-04-11',
-        },
-        {
-          id: 4,
-          title: 'Wolne pływanie',
-          description: '45 minut zmiennym spokojne tempo',
-          type: 'Running',
-          duration: 45,
-          data: '2022-04-12',
-        },
-        {
-          id: 5,
-          title: 'Szybkie bieganie',
-          description: '5 serii po 10 sekund sprintu x 3 serie',
-          type: 'Running',
-          duration: 15,
-          data: '2022-04-11',
-        },
-      ]);
+      .expect([]);
   });
 
-  it('/workouts/1 (GET)', () => {
-    return request(app.getHttpServer()).get('/workouts/1').expect(200).expect({
-      id: 1,
-      title: 'Szybkie bieganie',
-      description: '5 serii po 10 sekund sprintu x 3 serie',
-      type: 'Running',
-      duration: 15,
-      data: '2022-04-05',
+  describe('/workouts [Post]', () => {
+    async function createWorkout() {
+      await request(app.getHttpServer())
+        .post('/workouts')
+        .send(mockWorkoutDto)
+        .expect(201);
+    }
+
+    it('returns workout table', async () => {
+      await createWorkout();
+      const { body: response } = await request(app.getHttpServer())
+        .get('/workouts')
+        .send();
+
+      expect(response).toEqual([{ id: 1, ...mockWorkoutDto }]);
     });
   });
 
-  it('/workouts/1 (Delete)', () => {
-    return request(app.getHttpServer())
-      .delete('/workouts/1')
-      .expect(200)
-      .expect({});
+  describe('/workouts/[:id] [Delete]', () => {
+    async function createWorkout() {
+      await request(app.getHttpServer())
+        .post('/workouts')
+        .send(mockWorkoutDto)
+        .expect(201);
+    }
+
+    async function deleteWorkout() {
+      await request(app.getHttpServer())
+        .delete('/workouts/1')
+        .send()
+        .expect(200);
+    }
+
+    it('returns workout table', async () => {
+      await createWorkout();
+      await deleteWorkout();
+      const { body: response } = await request(app.getHttpServer())
+        .get('/workouts')
+        .send();
+
+      expect(response).toEqual([]);
+    });
+  });
+
+  describe('/workouts/find?from=&to= [Get]', () => {
+    async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
+      await request(app.getHttpServer())
+        .post('/workouts')
+        .send(createWorkoutDto)
+        .expect(201);
+    }
+
+    async function updateWorkout(updateWorkoutDto: UpdateWorkoutDto) {
+      await request(app.getHttpServer())
+        .post('/workouts')
+        .send(updateWorkoutDto)
+        .expect(201);
+    }
+
+    it('returns workout table', async () => {
+      await createWorkout(mockWorkoutDto);
+      await updateWorkout(mockWorkoutDto2);
+      const { body: response } = await request(app.getHttpServer())
+        .get('/workouts/find')
+        .query({ from: '2022/04/10', to: '2022/04/12' })
+        .send();
+
+      expect(response).toEqual([
+        {
+          id: 1,
+          title: 'Szybkie Testowanie',
+          description: 'Pisanie 200 stestów na godzinę',
+          type: 'Cardio',
+          duration: 60,
+          data: expect.any(String),
+        },
+      ]);
+    });
+  });
+
+  describe('/workouts/find?from=&to= [Get]', () => {
+    async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
+      await request(app.getHttpServer())
+        .post('/workouts')
+        .send(createWorkoutDto)
+        .expect(201);
+    }
+
+    it('returns workout table', async () => {
+      await createWorkout(mockWorkoutDto);
+      await createWorkout(mockWorkoutDto2);
+      await createWorkout(mockWorkoutDto3);
+      const { body: response } = await request(app.getHttpServer())
+        .get('/workouts/find')
+        .query({ from: '2022/04/10', to: '2022/04/12' })
+        .send();
+
+      expect(response).toEqual([
+        {
+          id: 1,
+          title: 'Szybkie Testowanie',
+          description: 'Pisanie 200 stestów na godzinę',
+          type: 'Cardio',
+          duration: 60,
+          data: expect.any(String),
+        },
+      ]);
+    });
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });
