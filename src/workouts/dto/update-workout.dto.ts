@@ -26,6 +26,7 @@ export class UpdateWorkoutDto implements IUpdatedWorkout {
 
   @IsNumber()
   @Min(1)
+  @IsOptional()
   duration?: number;
 
   @IsString()
