@@ -16,6 +16,10 @@ export const typeOrmConnectionOptionsFactory = (
     ormConfigName = 'test';
   }
 
+  if (nodeEnv === 'production') {
+    ormConfigName = 'production';
+  }
+
   const ormConfig = ormConfigurations.find((x) => x.name === ormConfigName);
 
   if (!ormConfig) {
