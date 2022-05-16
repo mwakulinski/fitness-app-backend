@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { formatInTimeZone } from 'date-fns-tz';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { DateHandlerService } from './date-handler/date-handler.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
@@ -73,9 +73,9 @@ export class WorkoutsService {
 
   async findBetweenDates(from: string, to: string) {
     try {
-      return await this.workoutRepository.query(
-        `SELECT * FROM workouts WHERE data BETWEEN '${from}' AND '${to}'`,
-      );
+      return await this.workoutRepository.find({
+        where: { data: Between(from, to) },
+      });
     } catch (error) {
       throw error;
     }
