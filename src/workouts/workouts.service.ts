@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Repository } from 'typeorm';
+import { DateHandlerService } from './date-handler/date-handler.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { Workout } from './entity/Workout.entity';
@@ -10,20 +11,13 @@ import { Workout } from './entity/Workout.entity';
 export class WorkoutsService {
   constructor(
     @InjectRepository(Workout) private workoutRepository: Repository<Workout>,
+    private readonly dateHandlerService: DateHandlerService,
   ) {}
 
   async getAll(): Promise<Workout[]> {
     try {
-      const workouts = await this.workoutRepository.query(
-        'SELECT id, title, description, type, duration, data FROM workouts',
-      );
-      workouts.forEach((workout) => {
-        workout.data = formatInTimeZone(
-          workout.data,
-          'Europe/Warsaw',
-          'yyyy-MM-dd HH:mm:ssXXX',
-        ).slice(0, 10);
-      });
+      const workouts = await this.workoutRepository.find();
+      this.dateHandlerService.handleDatesOutput(workouts);
       return workouts;
     } catch (error) {
       throw error;
@@ -33,11 +27,7 @@ export class WorkoutsService {
   async findById(id: number): Promise<Workout> {
     try {
       const workout = await this.workoutRepository.findOneOrFail(id);
-      workout.data = formatInTimeZone(
-        workout.data,
-        'Europe/Warsaw',
-        'yyyy-MM-dd HH:mm:ssXXX',
-      ).slice(0, 10);
+      this.dateHandlerService.handleDateType(workout);
       return workout;
     } catch (error) {
       console.log(error);
