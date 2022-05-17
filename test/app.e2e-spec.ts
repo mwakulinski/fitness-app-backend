@@ -87,6 +87,26 @@ describe('AppController (e2e)', () => {
         statusCode: 400,
       });
     });
+
+    it('returns error when some data is missing', async () => {
+      const { body: response } = await request(app.getHttpServer())
+        .post('/workouts')
+        .send({
+          description: 'Bieganie 2 razy po 500m',
+          type: 'Cardio',
+          duration: 60,
+          data: '2022-04-13',
+        });
+
+      expect(response).toEqual({
+        error: 'Bad Request',
+        message: [
+          'title must be longer than or equal to 5 characters',
+          'title must be a string',
+        ],
+        statusCode: 400,
+      });
+    });
   });
 
   describe('/workouts/[:id] [Delete]', () => {
