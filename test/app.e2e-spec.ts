@@ -5,6 +5,7 @@ import { AppModule } from './../src/app.module';
 import { cleanupBeforeEachSpec } from './../src/databasecleaner/database-cleaner';
 import { CreateWorkoutDto } from '../src/workouts/dto/create-workout.dto';
 import { UpdateWorkoutDto } from '../src/workouts/dto/update-workout.dto';
+import { mainConfig } from 'src/main.config';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -57,6 +58,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    mainConfig(app);
     await app.init();
   });
 
