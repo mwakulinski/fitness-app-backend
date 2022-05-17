@@ -5,7 +5,7 @@ import { AppModule } from './../src/app.module';
 import { cleanupBeforeEachSpec } from './../src/databasecleaner/database-cleaner';
 import { CreateWorkoutDto } from '../src/workouts/dto/create-workout.dto';
 import { UpdateWorkoutDto } from '../src/workouts/dto/update-workout.dto';
-import { mainConfig } from 'src/main.config';
+import { mainConfig } from '../src/main.config';
 import {
   mockWorkoutDto,
   mockWorkoutDto2,
@@ -65,6 +65,27 @@ describe('AppController (e2e)', () => {
         .send();
 
       expect(response).toEqual([{ id: 1, ...mockWorkoutDto }]);
+    });
+
+    it('returns error when incorrect data send', async () => {
+      const { body: response } = await request(app.getHttpServer())
+        .post('/workouts')
+        .send({
+          title: 123,
+          description: 'Bieganie 2 razy po 500m',
+          type: 'Cardio',
+          duration: 60,
+          data: '2022-04-13',
+        });
+
+      expect(response).toEqual({
+        error: 'Bad Request',
+        message: [
+          'title must be longer than or equal to 5 characters',
+          'title must be a string',
+        ],
+        statusCode: 400,
+      });
     });
   });
 
