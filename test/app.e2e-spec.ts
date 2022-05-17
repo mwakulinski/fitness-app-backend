@@ -6,30 +6,14 @@ import { cleanupBeforeEachSpec } from './../src/databasecleaner/database-cleaner
 import { CreateWorkoutDto } from '../src/workouts/dto/create-workout.dto';
 import { UpdateWorkoutDto } from '../src/workouts/dto/update-workout.dto';
 import { mainConfig } from 'src/main.config';
+import {
+  mockWorkoutDto,
+  mockWorkoutDto2,
+  mockWorkoutDto3,
+} from './mockWorkoutDto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  const mockWorkoutDto: CreateWorkoutDto = {
-    title: 'Szybkie Testowanie',
-    description: 'Pisanie 200 stestów na godzinę',
-    type: 'Cardio',
-    duration: 60,
-    data: '2022-04-12',
-  };
-  const mockWorkoutDto2: CreateWorkoutDto = {
-    title: 'Bieganie szybkie tempo',
-    description: 'Bieganie 2 razy po 500m',
-    type: 'Cardio',
-    duration: 60,
-    data: '2022-04-13',
-  };
-  const mockWorkoutDto3: CreateWorkoutDto = {
-    title: 'Szybkie Kodowanie',
-    description: 'Pisanie 1000 linijek kodu z hackertyper',
-    type: 'Cardio',
-    duration: 60,
-    data: '2022-04-15',
-  };
 
   async function createWorkout(createWorkoutDto: CreateWorkoutDto) {
     await request(app.getHttpServer())
@@ -85,7 +69,7 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts/[:id] [Delete]', () => {
-    it('returns workout table', async () => {
+    it('deletes workout from database', async () => {
       await createWorkout(mockWorkoutDto);
       await deleteWorkout(1);
       const { body: response } = await request(app.getHttpServer())
@@ -97,7 +81,7 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts/[:id] [Patch]', () => {
-    it('returns workout table', async () => {
+    it('updates workout table', async () => {
       await createWorkout(mockWorkoutDto);
       await updateWorkout(mockWorkoutDto2);
       const { body: response } = await request(app.getHttpServer())
@@ -116,7 +100,7 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/workouts/find?from=&to= [Get]', () => {
-    it('returns workout table', async () => {
+    it('returns array of workouts within given range', async () => {
       await createWorkout(mockWorkoutDto);
       await createWorkout(mockWorkoutDto2);
       await createWorkout(mockWorkoutDto3);
